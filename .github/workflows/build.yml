@@ -9,6 +9,9 @@ on:
       next_version_minor:
         required: false
         type: string
+      next_version_patch:
+        required: false
+        type: string
 
 env:
   VCPKG_ROOT: "${{github.workspace}}/dependencies/vcpkg"
@@ -39,7 +42,10 @@ jobs:
       if: ${{ inputs.next_version_major != '' }}
       run: |
         echo "[INFO] Version ${{ inputs.next_version_major }}.${{ inputs.next_version_minor }}"
-        echo "BUILD_FLAGS=${{ env.BUILD_FLAGS }} -DEMULATOR_VERSION_MAJOR=${{ inputs.next_version_major }} -DEMULATOR_VERSION_MINOR=${{ inputs.next_version_minor }}" >> $GITHUB_ENV
+        echo "BUILD_FLAGS=${{ env.BUILD_FLAGS }} \
+        -DEMULATOR_VERSION_MAJOR=${{ inputs.next_version_major }} \
+        -DEMULATOR_VERSION_MINOR=${{ inputs.next_version_minor }} \
+        -DEMULATOR_VERSION_PATCH=${{ inputs.next_version_patch }}" >> $GITHUB_ENV
         
     - name: "Install system dependencies"
       run: |
