@@ -59,28 +59,28 @@ jobs:
         -DEMULATOR_VERSION_MINOR=${{ inputs.next_version_minor }} \
         -DEMULATOR_VERSION_PATCH=${{ inputs.next_version_patch }}" >> $GITHUB_ENV
         
-    - name: "Install system dependencies"
+    - name: Install system dependencies
       run: |
         brew update
         brew install nasm automake libtool
 
-    - name: "Install molten-vk"
+    - name: Install molten-vk
       run: |
         curl -L -O https://github.com/KhronosGroup/MoltenVK/releases/download/v1.3.0/MoltenVK-macos.tar
         tar xf MoltenVK-macos.tar
         sudo mkdir -p /usr/local/lib
         sudo cp MoltenVK/MoltenVK/dynamic/dylib/macOS/libMoltenVK.dylib /usr/local/lib
 
-    - name: "Setup cmake"
+    - name: CMake setup 
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: '3.29.0'
 
-    - name: "Bootstrap vcpkg"
+    - name: Bootstrap vcpkg
       run: |
         bash ./dependencies/vcpkg/bootstrap-vcpkg.sh
         
-    - name: 'Setup NuGet Credentials for vcpkg'
+    - name: Setup NuGet Credentials for vcpkg
       shell: 'bash'
       run: |
         mono `./dependencies/vcpkg/vcpkg fetch nuget | tail -n 1` \
@@ -94,7 +94,7 @@ jobs:
         setapikey "${{ secrets.GITHUB_TOKEN }}" \
         -source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
         
-    - name: "CMake configuration"
+    - name: CMake configuration
       run: |
         mkdir build
         cd build
@@ -108,7 +108,7 @@ jobs:
       run: |
         cmake --build build
 
-    - name: "Move artifact"
+    - name: Move artifact
       run: |
         mv bin/Cemu_release.app bin/Cemu_${{ matrix.suffix }}.app
         mv bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/Cemu_release bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/Cemu_${{ matrix.suffix }}
@@ -128,7 +128,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Cemu-macOS-${{ matrix.suffix }}
-        path: ./bin/Cemu_${{ matrix.suffix }}.dmg
+        path: Cemu_${{ matrix.suffix }}.dmg
 #   
 #   universal-binary:
 #     runs-on: macos-15
