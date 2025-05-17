@@ -38,9 +38,6 @@ jobs:
       with:
         submodules: "recursive"
 
-    - name: "Select Xcode 16.2"
-      run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
-
     - name: "Verify Xcode Version"
       run: xcodebuild -version
         
@@ -110,17 +107,16 @@ jobs:
 
     - name: Move artifact
       run: |
-        mv bin/Cemu_release.app bin/Cemu_${{ matrix.suffix }}.app
-        mv bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/Cemu_release bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/Cemu_${{ matrix.suffix }}
-        sed -i '' 's/Cemu_release/Cemu_${{ matrix.suffix }}/g' bin/Cemu_${{ matrix.suffix }}.app/Contents/Info.plist
-        chmod a+x bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/{Cemu_${{ matrix.suffix }},update.sh}
-        install_name_tool -change @rpath/libusb-1.0.0.dylib @loader_path/../Frameworks/libusb-1.0.0.dylib bin/Cemu_${{ matrix.suffix }}.app/Contents/MacOS/Cemu_${{ matrix.suffix }}
-        codesign --force --deep --sign - bin/Cemu_${{ matrix.suffix }}.app
+        mv bin/Cemu_release.app bin/Cemu.app
+        mv bin/Cemu.app/Contents/MacOS/Cemu_release bin/Cemu.app/Contents/MacOS/Cemu
+        sed -i '' 's/Cemu_release/Cemu/g' bin/Cemu.app/Contents/Info.plist
+        chmod a+x bin/Cemu.app/Contents/MacOS/{Cemu,update.sh}
+        codesign --force --deep --sign - bin/Cemu.app
     
     - name: Prepare artifacts
       run: |
         mkdir bin/Cemu_app_${{ matrix.suffix }}
-        mv bin/Cemu_${{ matrix.suffix }}.app bin/Cemu_app_${{ matrix.suffix }}/Cemu_${{ matrix.suffix }}.app
+        mv bin/Cemu.app bin/Cemu_app_${{ matrix.suffix }}/Cemu.app
         ln -s /Applications bin/Cemu_app_${{ matrix.suffix }}/Applications
         hdiutil create -volname "Cemu" -srcfolder "bin/Cemu_app_${{ matrix.suffix }}" "Cemu_${{ matrix.suffix }}"
   
