@@ -114,7 +114,7 @@ jobs:
         mv bin/Cemu.app/Contents/MacOS/Cemu_release bin/Cemu.app/Contents/MacOS/Cemu
         sed -i '' 's/Cemu_release/Cemu/g' bin/Cemu.app/Contents/Info.plist
         chmod a+x bin/Cemu.app/Contents/MacOS/{Cemu,update.sh}
-        codesign --force --deep --sign - bin/Cemu.app
+#        codesign --force --deep --sign - bin/Cemu.app
     
     - name: Prepare artifacts
       run: |
