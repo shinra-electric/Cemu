@@ -114,7 +114,6 @@ jobs:
         mv bin/Cemu.app/Contents/MacOS/Cemu_release bin/Cemu.app/Contents/MacOS/Cemu
         sed -i '' 's/Cemu_release/Cemu/g' bin/Cemu.app/Contents/Info.plist
         chmod a+x bin/Cemu.app/Contents/MacOS/{Cemu,update.sh}
-#        install_name_tool -change @rpath/libusb-1.0.0.dylib @loader_path/../Frameworks/libusb-1.0.0.dylib bin/Cemu.app/Contents/MacOS/Cemu
         codesign --force --deep --sign - bin/Cemu.app
     
     - name: Prepare artifacts
